@@ -1,0 +1,8 @@
+#N = number of items
+20
+
+#b = capacity of each bin
+50
+
+#a_j = weight of item j
+16	7	9	10	12	16	5	9	8	12	7	10	12	15	7	11	13	9	10	15

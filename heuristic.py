@@ -1,3 +1,6 @@
+import time
+
+
 class Bin:
     def __init__(self, capacity):
         self.capacity = capacity
@@ -10,7 +13,6 @@ class Bin:
 
 def read_input_from_file(filename):
     with open(filename, 'r') as file:
-        # Funzione helper per leggere la prossima riga non commentata e non vuota
         def get_next_valid_line():
             line = file.readline().strip()
             while not line or line.startswith('#'):
@@ -42,13 +44,17 @@ def first_fit(N, b, a):
         else:
             bins.append(Bin(b))
             i += 1
+            bins[i].add(item)
 
     return bins
 
 
 def main():
-    N, bin_capacity, item_weights = read_input_from_file("../Instances/Instance100.txt")
+    N, bin_capacity, item_weights = read_input_from_file("../Instances/Instance200.txt")
+    start_time = time.perf_counter()
     bins = first_fit(N, bin_capacity, item_weights)
+    end_time = time.perf_counter()
+    print(f"Time: {end_time - start_time}")
     print(f'Number of bins used: {len(bins)}')
 
     for bin in bins:
@@ -56,6 +62,5 @@ def main():
         print(f"Items in Bin:", bin.items)
 
 
-# Ora, chiama le funzioni:
 if __name__ == "__main__":
     main()

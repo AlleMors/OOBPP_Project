@@ -22,9 +22,9 @@ def read_instance(file_path):
                 b = int(next(line_iterator))
             elif line.startswith("#a_j"):
                 next_line = next(line_iterator)
-                print("Line with weights:", repr(next_line))  # Debug print
 
                 a = list(map(int, next_line.split('\t'))) if next_line else []
+                print(len(a))
 
                 break
     except Exception as e:
@@ -35,7 +35,7 @@ def read_instance(file_path):
 
 
 if __name__ == '__main__':
-    read_instance("../Instances/Instance10.txt")
+    read_instance("../Instances/Instance200.txt")
     print("Number of elements (N):", N)
     print("Bin capacity (b):", b)
     print("Element weights (a_j):", a)
@@ -45,6 +45,10 @@ if __name__ == '__main__':
 
     model = LpProblem("OOEBP_Problem", LpMinimize)
 
+    time_limit = 300
+
+    model.solver = PULP_CBC_CMD(timeLimit=time_limit)
+
     # y_i indicates if item i is the overflow item in its bin
     y = LpVariable.dicts("y", ii, cat="Binary")
     # x_ij indicates whether item i is assigned to the bin where the overflow item is j
@@ -53,28 +57,36 @@ if __name__ == '__main__':
     model += lpSum([y[i] for i in ii]), "Objective"
 
     for i in ii:
-        model += y[i] + lpSum(x[i, j] for j in jj if j > i) == 1, f"OverflowItemConstraint_{i}"
+        model += y[i] + lpSum([x[i, j] for j in jj if j > i]) == 1, f"OverflowItemConstraint_{i}"
 
     for j in jj:
-        model += lpSum(a[i] * x[i, j] for i in ii if j > i) <= (b - 1) * y[j], f"AssignToOverflowBinConstraint_{j}"
+        model += lpSum([a[i] * x[i, j] for i in ii if j > i]) <= (b - 1) * y[j], f"AssignToOverflowBinConstraint_{j}"
 
     model.writeLP("OOBPP_Problem.lp")
 
     model.solve()
     print("Status:", LpStatus[model.status])
 
-    # Dopo aver risolto il problema
     if LpStatus[model.status] == "Optimal":
         bin_contents = {}
+
         for i in ii:
+            in_overflow = False
             for j in range(i + 1, N):
                 if value(x[i, j]) == 1:
                     if j not in bin_contents:
                         bin_contents[j] = []
-                    bin_contents[j].append((i, a[i]))  # Aggiungi il valore dell'elemento al bin
+                    bin_contents[j].append((i, a[i]))
+                    in_overflow = True
+
+            if not in_overflow:
+                if i not in bin_contents:
+                    bin_contents[i] = [(i, a[i])]
+                else:
+                    bin_contents[i].append((i, a[i]))
 
         for bin_number, items in bin_contents.items():
-            total_value = sum(item[1] for item in items)  # Calcola il valore totale del bin
+            total_value = sum(item[1] for item in items)
             print(f"Bin {bin_number}: {items}, Valore Totale: {total_value}")
     else:
         print("Il problema non ha una soluzione ottimale.")

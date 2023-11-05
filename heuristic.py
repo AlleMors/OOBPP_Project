@@ -30,11 +30,13 @@ def read_input_from_file(filename):
 
 
 def first_fit(N, b, a):
-    a_sorted = sorted(a, reverse=True)
+    print(a)
+    print(b)
+    print(N)
     bins = [Bin(b)]
     i = 0
 
-    for item in a_sorted:
+    for item in a:
         if bins[i].capacity > 0:
             bins[i].add(item)
         else:
@@ -45,7 +47,7 @@ def first_fit(N, b, a):
 
 
 def main():
-    N, bin_capacity, item_weights = read_input_from_file("Instances/Instance200.txt")
+    N, bin_capacity, item_weights = read_input_from_file("../Instances/Instance100.txt")
     bins = first_fit(N, bin_capacity, item_weights)
     print(f'Number of bins used: {len(bins)}')
 

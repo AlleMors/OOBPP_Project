@@ -1,4 +1,5 @@
 from pulp import *
+import time
 
 N = None  # Number of elements
 b = None  # Bin capacity
@@ -35,7 +36,8 @@ def read_instance(file_path):
 
 
 if __name__ == '__main__':
-    read_instance("../Instances/Instance200.txt")
+    instance = "../Instances/Instance50.txt"
+    read_instance(instance)
     print("Number of elements (N):", N)
     print("Bin capacity (b):", b)
     print("Element weights (a_j):", a)
@@ -63,11 +65,19 @@ if __name__ == '__main__':
         model += lpSum([a[i] * x[i, j] for i in ii if j > i]) <= (b - 1) * y[j], f"AssignToOverflowBinConstraint_{j}"
 
     model.writeLP("OOBPP_Problem.lp")
-
+    start_time = time.perf_counter()
     model.solve()
+    stop_time = time.perf_counter()
+
+    solve_time = stop_time - start_time
+
     print("Status:", LpStatus[model.status])
 
-    if LpStatus[model.status] == "Optimal":
+    with open("output.txt", "w") as output_file:
+        output_file.write(f"Instance Path: {instance}\n")
+        output_file.write(f"Status: {LpStatus[model.status]}\n")
+        output_file.write(f"Objective Value: {value(model.objective)}\n")
+
         bin_contents = {}
 
         for i in ii:
@@ -86,7 +96,6 @@ if __name__ == '__main__':
                     bin_contents[i].append((i, a[i]))
 
         for bin_number, items in bin_contents.items():
-            total_value = sum(item[1] for item in items)
-            print(f"Bin {bin_number}: {items}, Valore Totale: {total_value}")
-    else:
-        print("Il problema non ha una soluzione ottimale.")
+            output_file.write(f"Bin {bin_number}: {items}\n")
+
+        output_file.write(f"Solving time: {solve_time}")

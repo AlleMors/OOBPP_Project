@@ -50,16 +50,21 @@ def first_fit(N, b, a):
 
 
 def main():
-    N, bin_capacity, item_weights = read_input_from_file("../Instances/Instance200.txt")
+    instance = "../Instances/Instance200.txt"
+    N, bin_capacity, item_weights = read_input_from_file(instance)
     start_time = time.perf_counter()
     bins = first_fit(N, bin_capacity, item_weights)
     end_time = time.perf_counter()
     print(f"Time: {end_time - start_time}")
     print(f'Number of bins used: {len(bins)}')
 
-    for bin in bins:
-        print("Bin Capacity:", bin.capacity)
-        print(f"Items in Bin:", bin.items)
+    with open("output.txt", "w") as output_file:
+        output_file.write(f"Instance Path: {instance}\n")
+        output_file.write(f"Status: Heuristic Solution\n")
+        output_file.write(f"Objective Value: {len(bins)}\n")
+        for bin in bins:
+            output_file.write(f"Items in Bin: {bin.items}\n")
+        output_file.write(f"Solving Time: {end_time-start_time}")
 
 
 if __name__ == "__main__":

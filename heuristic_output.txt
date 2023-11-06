@@ -1,0 +1,20 @@
+Instance Path: ../Instances/Instance50.txt
+Status: Heuristic Solution
+Objective Value: 16
+Items in Bin: [196, 193]
+Items in Bin: [191, 188]
+Items in Bin: [187, 177]
+Items in Bin: [171, 171]
+Items in Bin: [157, 148]
+Items in Bin: [141, 128]
+Items in Bin: [124, 121]
+Items in Bin: [120, 109]
+Items in Bin: [107, 104]
+Items in Bin: [98, 94, 90]
+Items in Bin: [83, 83, 77]
+Items in Bin: [77, 76, 70]
+Items in Bin: [64, 63, 61, 59]
+Items in Bin: [55, 52, 50, 48]
+Items in Bin: [47, 44, 44, 30, 27, 27]
+Items in Bin: [27, 21, 14, 14, 13, 9, 8, 8, 3]
+Solving Time: 5.510000000000237e-05

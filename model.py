@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     print("Status:", LpStatus[model.status])
 
-    with open("output.txt", "w") as output_file:
+    with open("model_output.txt", "w") as output_file:
         output_file.write(f"Instance Path: {instance}\n")
         output_file.write(f"Status: {LpStatus[model.status]}\n")
         output_file.write(f"Objective Value: {value(model.objective)}\n")
